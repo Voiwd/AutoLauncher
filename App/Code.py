@@ -65,12 +65,11 @@ tab_row = Frame(Sandbox_Screen, bg=dark1,
                 highlightbackground=dark2, highlightthickness=3, height=40)
 tab_row.pack(fill=X, side=TOP)
 
-workspace = Frame(Sandbox_Screen, bg=dark2)
-workspace.pack(fill=BOTH, expand=True)
 
-workspace.grid_rowconfigure(0, weight=1)
-# Permite expansão apenas no App Space
-workspace.grid_columnconfigure(1, weight=1)
+screen = Frame(Sandbox_Screen, bg=dark2)
+screen.pack(fill=BOTH, expand=True)
+screen.grid_rowconfigure(0, weight=1)
+screen.grid_columnconfigure(1, weight=1)
 
 # Tabs
 tab_New = StyledButton(tab_row, text="New Preset")
@@ -87,16 +86,20 @@ backButton.pack(side=RIGHT, padx=10, pady=5)
 
 # Workspace
 properties_container = Frame(
-    workspace, width=200, bg=dark2, highlightbackground=dark1, highlightthickness=1)
+    screen, width=200, bg=dark2, highlightbackground=dark1, highlightthickness=1)
 properties_container.grid(row=0, column=0, sticky="ns")
 
-workspace_center = Frame(workspace, bg=dark2,
-                         highlightbackground=dark1, highlightthickness=1)
-workspace_center.grid(row=0, column=1, sticky="nsew")
+workspace = Frame(screen, bg=dark2,
+                  highlightbackground=dark1, highlightthickness=1)
+workspace.grid(row=0, column=1, sticky="nsew")
+workspace.grid_rowconfigure(0, weight=1)
+workspace.grid_rowconfigure(1, weight=2)
+workspace.grid_columnconfigure(0, weight=1)
 
 explorer_container = Frame(
-    workspace, width=200, bg=dark2, highlightbackground=dark1, highlightthickness=1)
+    screen, width=200, bg=dark2, highlightbackground=dark1, highlightthickness=1)
 explorer_container.grid(row=0, column=2, sticky="ns")
+explorer_container.grid_rowconfigure(2, weight=1)
 
 # *Properties*
 
@@ -108,7 +111,7 @@ name_entry.pack(side=TOP, pady=20, padx=20, ipadx=5, ipady=5)
 prptsFrame = Canvas(properties_container, bg=dark2)
 prptsFrame.pack(side=RIGHT, padx=10, pady=20, fill=BOTH, expand=True)
 
-# >Scroll
+
 scrollbar = Scrollbar(
     prptsFrame, orient="vertical", command=Canvas.yview, width=2)
 prptsFrame.configure(yscrollcommand=Scrollbar.set)
@@ -116,38 +119,41 @@ prptsFrame.configure(yscrollcommand=Scrollbar.set)
 scrollbar.pack(side='left', fill=Y, padx=(5, 10), pady=5)
 
 
-# *App Space*
+# *Workspace*
 
-# Topbar
+# Toolsbar
 launch_methods = ["Simple", "Timed"]
-top_bar = Frame(workspace_center, bg=dark1)
-top_bar.pack(side=TOP, padx=10, pady=10, fill=BOTH)
+tools_bar = Frame(workspace, bg=dark1)
+tools_bar.grid(column=0, row=0, sticky="nsew", padx=10, pady=10)
 
 # Type
-type = ttk.Combobox(top_bar, values=launch_methods)
+type = ttk.Combobox(tools_bar, values=launch_methods)
 type.set(launch_methods[0])
 type.pack(side='left', padx=5, pady=5)
 
+# Tools
+
 # Desk
-desk = Frame(workspace_center, bg=dark2,
-             highlightbackground=dark1, highlightthickness=1)
-desk.pack(side=TOP, padx=10, pady=(10, 20), fill=BOTH, expand=True)
+desk = Frame(workspace, bg=dark2,
+             highlightbackground=dark1, highlightthickness=1, width=300, height=300)
+desk.grid(column=0, row=1, sticky="nsew", padx=10, pady=(5, 20))
 
 # *Explorer*
 
 # Search and Files Order
 search_bar = Entry(explorer_container, bg=dark1, fg=light2)
-search_bar.place(anchor='center', relwidth=0.6, y=20, x=80)
+search_bar.grid(column=0, row=0, pady=5, ipady=5)
 
 add_path = Button(explorer_container, bg=dark1, text="+", width=1, height=1)
-add_path.place(anchor=CENTER, x=160, y=20)
+add_path.grid(column=1, row=0, ipadx=3, ipady=3)
 
 order_button = Button(explorer_container, bg=dark1,
                       text="Tt", width=1, height=1)
-order_button.place(anchor=CENTER, x=180, y=20)
+order_button.grid(column=1, row=1, ipadx=3, ipady=3)
 
 # Files
-files = Canvas(explorer_container, bg=dark2)
-files.place(width=180, height=365, y=60, x=10)
+files = Canvas(explorer_container, bg=dark2, width=160)
+files.grid(column=0, row=2, sticky="ns", pady=(10, 20), padx=(10, 0))
+
 
 window.mainloop()

@@ -1,0 +1,37 @@
+Widgets Position Type
+
+Screens = Place()
+
+#Home
+Presets_Container = Place()
+More_Button = Place()
+Edit_Button = Place()
+
+#Sandbox
+tab_row = Pack()
+screen = Pack()
+
+>tabs
+tab_New = Pack()
+tab_Preferences = Pack()
+back_button = Pack()
+
+>screen
+properties_container = Grid()
+worskpace = Grid()
+explorer_container = Grid()
+
+>>properties
+name_entry = Pack()
+prptsFrame = Pack()
+
+>>worskpace
+tools_bar = Pack()
+desk = Pack()
+
+>>explorer
+search_bar = Place()
+add_path = Place()
+order_button = Place()
+
+files = place()

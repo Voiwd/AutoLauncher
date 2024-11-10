@@ -3,3 +3,7 @@ concept.psb
 test.py
 lib/code.txt
 lib/PositionLog
+code
+lib/__pycache__/styles.cpython-313.pyc
+lib/lab.py
+lib/logic.py

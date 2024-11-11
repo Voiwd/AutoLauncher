@@ -1,8 +1,8 @@
 from tkinter import *
 from tkinter import ttk
+from lib.logic import file_to_lb
 from PIL import Image, ImageTk
 import sv_ttk
-
 # Color palette
 light1 = "#60C7FB"
 light2 = "#FFFFFF"
@@ -46,8 +46,6 @@ notice = ttk.Label(task_container, text="No tasks available.")
 notice.place(relx=0.5, rely=0.5, anchor="center")
 
 # -Buttons
-
-
 def go_to_sandbox():
     Home_Screen.place_forget()
     Sandbox_Screen.place(relheight=1, relwidth=1)
@@ -57,12 +55,11 @@ def go_to_home():
     Sandbox_Screen.place_forget()
     Home_Screen.place(relheight=1, relwidth=1)
 
+more_btn = ttk.Button(window, text="+", width=20, command=go_to_sandbox, image=plus_tk, compound="center")
+more_btn.place(in_=task_container, relx=1, y=-50, anchor="ne")
 
-more_btn = ttk.Button(window, text="+", width=20, command=go_to_sandbox, image=plus_tk, compound="center").place(
-    in_=task_container, relx=1, y=-50, anchor="ne")
-
-edit_btn = ttk.Button(window, width=20, image=edit_tk, compound="center").place(
-    in_=task_container, relx=.46, y=-50, anchor="ne")
+edit_btn = ttk.Button(window, width=20, image=edit_tk, compound="center")
+edit_btn.place(in_=task_container, relx=.46, y=-50, anchor="ne")
 
 # **Sandbox Screen**
 
@@ -127,14 +124,14 @@ search_bar.place(x=825, y=20)
 sort_btn = ttk.Button(tab1, text="Sortering",image=sort_tk)
 sort_btn.place(x=825, y=55)
 
-import_btn = ttk.Button(tab1, text="Sortering",image=folder_tk)
-import_btn.place(x=870, y=55)
+file_btn = ttk.Button(tab1, text="Add File",image=folder_tk, command=lambda: file_to_lb(filesLB, items))
+file_btn.place(x=870, y=55)
 
 add_btn = ttk.Button(tab1,image=plus_tk, width=4, compound="center", style="Accent.TButton")
 add_btn.place(x=920, y=55)
 
 sort_btn.bind("<ButtonRelease-1>", remove_focus)
-import_btn.bind("<ButtonRelease-1>", remove_focus)
+file_btn.bind("<ButtonRelease-1>", remove_focus)
 add_btn.bind("<ButtonRelease-1>", remove_focus)
 
 explorer = ttk.Labelframe(tab1, text="Explorer")
@@ -142,16 +139,6 @@ explorer.place(width=150, height=440, x=825, y=90)
 
 items = []
 filesLB = Listbox(explorer, selectmode="extended")
-
-
-def refresh():
-    filesLB.delete(0, END)
-    for i in items:
-        filesLB.insert(END, i)
-
-
-refresh()
-
 filesLB.place(y=1, width=150, height=425)
 
 # Exe

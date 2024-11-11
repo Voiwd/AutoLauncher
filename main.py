@@ -3,6 +3,12 @@ from tkinter import ttk
 from lib.logic import file_to_lb
 from PIL import Image, ImageTk
 import sv_ttk
+import os
+import tempfile
+import ctypes
+from ctypes import windll, wintypes
+
+
 # Color palette
 light1 = "#60C7FB"
 light2 = "#FFFFFF"
@@ -15,8 +21,10 @@ def remove_focus(event):
 # Window
 window = Tk()
 window.geometry("1000x600")
-window.title("AutoLauncher")
+window.title("QuickStarter")
 window.resizable(0, 0)
+icon = ImageTk.PhotoImage(file="lib\source\QS.png")
+window.iconphoto(False, icon)
 
 # Styles
 edit_img = Image.open("lib/source/edit.png").resize((15, 15))

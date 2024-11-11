@@ -1,6 +1,7 @@
 from tkinter import *
 from random import randint
 from tkinter import filedialog
+import os
 
 # MÉTODOS | METHODS
 
@@ -31,14 +32,12 @@ def add_item_to_lb(item_list, listbox, name=None):
     refresh_lb(listbox, item_list)
 
 def open_file():
-    filetypes = (("BOTH", "*.png *.jpeg"), ("PNG", "*.png"), ("JPEG", "*.jpeg"))
+    filetypes = (("BOTH", "*.png *.jpeg"), ("PNG", "*.png"), ("JPEG", "*.jpeg"), ("EXE", "*.exe"))
     filenames = filedialog.askopenfilenames(initialdir="C:\\", title="Select a file", filetypes=filetypes)
     
     return filenames
 
 def file_to_lb(listbox, item_list):
     for fn in open_file():
-        item_list.append(fn)
+        item_list.append(os.path.basename(fn))
         refresh_lb(listbox, item_list)
-
-

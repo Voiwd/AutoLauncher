@@ -1,7 +1,9 @@
 from tkinter import *
+from tkinter import ttk
 from random import randint
 from tkinter import filedialog
 import os
+from PIL import Image, ImageTk
 
 # MÉTODOS | METHODS
 
@@ -32,7 +34,7 @@ def add_item_to_lb(item_list, listbox, name=None):
     refresh_lb(listbox, item_list)
 
 def open_file():
-    filetypes = (("BOTH", "*.png *.jpeg"), ("PNG", "*.png"), ("JPEG", "*.jpeg"), ("EXE", "*.exe"))
+    filetypes = (("All", "*.png *.jpeg, *.jpg, *.exe"), ("PNG", "*.png"), ("JPEG", "*.jpeg, *.jpg"), ("EXE", "*.exe"))
     filenames = filedialog.askopenfilenames(initialdir="C:\\", title="Select a file", filetypes=filetypes)
     
     return filenames
@@ -41,3 +43,37 @@ def file_to_lb(listbox, item_list):
     for fn in open_file():
         item_list.append(os.path.basename(fn))
         refresh_lb(listbox, item_list)
+
+def get_icon(file_type):
+    # gallery
+    icon_gallery = {
+        "png": "lib/source/image.png",
+        "jpeg": "lib/source/image.png",
+        "jpg": "lib/source/image.png",
+        "mp3": "lib/source/audio.png",
+        "wav": "lib/source/audio.png",
+        "exe": "lib/source/exe.png"}
+
+    return icon_gallery.get(file_type, "lib/source/file.png")
+
+icon_images = []
+def file_to_treeview(tree):
+    files = open_file()
+
+    for file in files:
+        file_name = os.path.basename(file)
+        file_type = os.path.splitext(file_name)[1][1:]
+        file_name = os.path.splitext(file_name)[0]
+
+        icon_path = get_icon(file_type)
+
+        # Carregar e redimensionar a imagem
+        icon_img = Image.open(icon_path).resize((20, 20))
+        icon_photo = ImageTk.PhotoImage(icon_img)
+
+
+        # Inserir item na Treeview com a imagem e o nome do arquivo
+        tree.insert("", "end", values=file_name)
+
+def print_tv_active(tree : ttk.Treeview):
+    print(tree.bind(ACTIVE))

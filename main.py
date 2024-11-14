@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import ttk
-from lib.logic import file_to_treeview, print_tv_active
+from lib.logic import print_tv_active, format
 from PIL import Image, ImageTk
 import sv_ttk
 import os
@@ -107,7 +107,7 @@ workspace = ttk.Labelframe(tab1, text="Workspace")
 workspace.place(x=210, y=60, height=470, width=580)
 workspace.bind("<ButtonRelease-1>", remove_focus)
 
-# tools
+# workspace tools
 modes = ["Default (Unordered)", "Timed"]
 typeCBox = ttk.Combobox(tab1, values=modes, width=16)
 typeCBox.set(modes[0])
@@ -130,14 +130,13 @@ clear_tool.bind("<ButtonRelease-1>", remove_focus)
 import_tool.bind("<ButtonRelease-1>", remove_focus)
 
 # explorer
-
 search_bar = ttk.Entry(tab1, width=19)
 search_bar.place(x=805, y=20)
 sort_btn = ttk.Button(tab1, text="Sortering", image=sort_tk)
 sort_btn.place(x=805, y=55)
 
 file_btn = ttk.Button(tab1, text="Add File", image=folder_tk,
-                      command=lambda: file_to_treeview(tv))
+                      command=format)
 file_btn.place(x=850, y=55)
 
 add_btn = ttk.Button(tab1, image=plus_tk, width=4,
@@ -148,10 +147,11 @@ sort_btn.bind("<ButtonRelease-1>", remove_focus)
 file_btn.bind("<ButtonRelease-1>", remove_focus)
 add_btn.bind("<ButtonRelease-1>", remove_focus)
 
+files_dic = {}
 
 tv = ttk.Treeview(tab1, columns=("name"), show="headings")
 tv.column("name", minwidth=50, width=50)
-tv.heading("name", text="Name")
+tv.heading("name", text="Aa-Zz")
 
 tv.place(width=170, height=440, x=805, y=90)
 # Exe

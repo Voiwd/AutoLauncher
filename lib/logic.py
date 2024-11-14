@@ -56,24 +56,28 @@ def get_icon(file_type):
 
     return icon_gallery.get(file_type, "lib/source/file.png")
 
-icon_images = []
-def file_to_treeview(tree):
+def get_file_log():
     files = open_file()
+    logs = []
 
     for file in files:
         file_name = os.path.basename(file)
         file_type = os.path.splitext(file_name)[1][1:]
         file_name = os.path.splitext(file_name)[0]
 
-        icon_path = get_icon(file_type)
-
+        log = {"Name": file_name, "Extension" : file_type, "Adress" : file}
+        
+        logs.append(log)
         # Carregar e redimensionar a imagem
-        icon_img = Image.open(icon_path).resize((20, 20))
-        icon_photo = ImageTk.PhotoImage(icon_img)
+        #icon_path = get_icon(file_type)
+        #icon_img = Image.open(icon_path).resize((20, 20))
+        #icon_photo = ImageTk.PhotoImage(icon_img)
 
-
-        # Inserir item na Treeview com a imagem e o nome do arquivo
-        tree.insert("", "end", values=file_name)
+    return logs
 
 def print_tv_active(tree : ttk.Treeview):
     print(tree.bind(ACTIVE))
+
+def format():
+    logs = get_file_log()
+    print(logs)

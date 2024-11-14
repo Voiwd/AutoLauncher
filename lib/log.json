@@ -1,0 +1,12 @@
+{
+    "shortname1": {
+        "Name": "arquivoTeste1",
+        "Extension": "jpg",
+        "Adress": "C:/imagens/arquivo1.jpg"
+    },
+    "shortname2": {
+        "Name": "arquivoTeste2",
+        "Extension": "png",
+        "Adress": "C:/imagens/arquivo1.png"
+    }
+}

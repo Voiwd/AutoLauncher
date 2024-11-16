@@ -33,16 +33,11 @@ def add_item_to_lb(item_list, listbox, name=None):
     item_list.append(name)  
     refresh_lb(listbox, item_list)
 
-def open_file():
+def get_file():
     filetypes = (("All", "*.png *.jpeg, *.jpg, *.exe"), ("PNG", "*.png"), ("JPEG", "*.jpeg, *.jpg"), ("EXE", "*.exe"))
     filenames = filedialog.askopenfilenames(initialdir="C:\\", title="Select a file", filetypes=filetypes)
     
     return filenames
-
-def file_to_lb(listbox, item_list):
-    for fn in open_file():
-        item_list.append(os.path.basename(fn))
-        refresh_lb(listbox, item_list)
 
 def get_icon(file_type):
     # gallery
@@ -56,8 +51,8 @@ def get_icon(file_type):
 
     return icon_gallery.get(file_type, "lib/source/file.png")
 
-def get_file_log():
-    files = open_file()
+def get_file_dox():
+    files = get_file()
     logs = []
 
     for file in files:
@@ -78,6 +73,26 @@ def get_file_log():
 def print_tv_active(tree : ttk.Treeview):
     print(tree.bind(ACTIVE))
 
-def format():
-    logs = get_file_log()
-    print(logs)
+def verify_existed_file(name, extension, json):
+    # Listar todos os pares de Nome e Extensão no JSON
+    values_Name_Ex = [(item['Name'], item['Extension']) for item in json.values()]
+    
+    # Verificar se o nome e a extensão já existem
+    reformated_name = name
+    contador = 1
+    while (reformated_name, extension) in values_Name_Ex:
+        reformated_name = f"{name}({contador})"
+        contador += 1
+    
+    # Retornar o nome único
+    return reformated_name
+
+def add_to_json():
+    pass
+
+def refresh_tv(treeview: ttk.Treeview, logs):
+    for item in treeview.get_children():
+        treeview.delete(item)
+
+    for log in logs:
+        treeview.insert("", "end", values=(log["Name"], log["Extension"], log["Adress"]))

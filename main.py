@@ -1,13 +1,15 @@
 from tkinter import *
 from tkinter import ttk
-from lib.logic import print_tv_active, format
+from lib.logic import print_tv_active, get_file_dox, verify_existed_file
 from PIL import Image, ImageTk
 import sv_ttk
 import os
 import tempfile
 import ctypes
 from ctypes import windll, wintypes
+import json
 
+data : dict = json.load(open("lib/log.json"))
 
 # Color palette
 light1 = "#60C7FB"
@@ -25,15 +27,15 @@ window = Tk()
 window.geometry("1000x600")
 window.title("QuickStarter")
 window.resizable(0, 0)
-icon = ImageTk.PhotoImage(file="lib\source\QS.png")
+icon = ImageTk.PhotoImage(file="lib/source/QS.png")
 window.iconphoto(False, icon)
 
 # Styles
 edit_img = Image.open("lib/source/edit.png").resize((15, 15))
-plus_img = Image.open("lib\source\plus.png").resize((10, 10))
-sort_img = Image.open("lib\source\sort-az.png").resize((15, 15))
-folder_img = Image.open("lib\source\\folder.png").resize((15, 15))
-minus_img = Image.open("lib\source\minus.png").resize((10, 10))
+plus_img = Image.open("lib/source/plus.png").resize((10, 10))
+sort_img = Image.open("lib/source/sort-az.png").resize((15, 15))
+folder_img = Image.open("lib/source/folder.png").resize((15, 15))
+minus_img = Image.open("lib/source/minus.png").resize((10, 10))
 
 edit_tk = ImageTk.PhotoImage(edit_img)
 plus_tk = ImageTk.PhotoImage(plus_img)
@@ -56,8 +58,6 @@ notice = ttk.Label(task_container, text="No tasks available.")
 notice.place(relx=0.5, rely=0.5, anchor="center")
 
 # -Buttons
-
-
 def go_to_sandbox():
     Home_Screen.place_forget()
     Sandbox_Screen.place(relheight=1, relwidth=1)
@@ -130,13 +130,26 @@ clear_tool.bind("<ButtonRelease-1>", remove_focus)
 import_tool.bind("<ButtonRelease-1>", remove_focus)
 
 # explorer
+def import_file():
+    filelist = get_file_dox() # retorna arquivos importados como: [{'Name': 'Obsidian-1.6.7', 'Extension': 'exe', 'Adress': 'C:/Users/User/Downloads/Obsidian-1.6.7.exe'}]
+    
+    values = [(item["Name"], item["Extension"], item["Adress"]) for item in filelist]
+
+    for n, e, a in values:
+        
+        print(verify_existed_file(n, e, data))
+
+        
+def test():
+    print(get_file_dox())
+
 search_bar = ttk.Entry(tab1, width=19)
 search_bar.place(x=805, y=20)
 sort_btn = ttk.Button(tab1, text="Sortering", image=sort_tk)
 sort_btn.place(x=805, y=55)
 
 file_btn = ttk.Button(tab1, text="Add File", image=folder_tk,
-                      command=format)
+                      command=import_file)
 file_btn.place(x=850, y=55)
 
 add_btn = ttk.Button(tab1, image=plus_tk, width=4,

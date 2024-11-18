@@ -1,12 +1,3 @@
 {
-    "shape": {
-        "Name": "shape",
-        "Extension": "png",
-        "Adress": "C:/Users/BRUNO/Downloads/shape.png"
-    },
-    "3d-cube": {
-        "Name": "3d-cube",
-        "Extension": "png",
-        "Adress": "C:/Users/BRUNO/Downloads/3d-cube.png"
-    }
+    
 }

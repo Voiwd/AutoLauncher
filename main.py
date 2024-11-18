@@ -3,13 +3,10 @@ from tkinter import ttk
 from lib.logic import print_tv_active, get_file_dox, verify_existed_file
 from PIL import Image, ImageTk
 import sv_ttk
-import os
-import tempfile
-import ctypes
-from ctypes import windll, wintypes
 import json
 
-data : dict = json.load(open("lib/log.json"))
+with open("lib/log.json", "r") as f:
+    data = json.load(f)
 
 # Color palette
 light1 = "#60C7FB"
@@ -58,6 +55,8 @@ notice = ttk.Label(task_container, text="No tasks available.")
 notice.place(relx=0.5, rely=0.5, anchor="center")
 
 # -Buttons
+
+
 def go_to_sandbox():
     Home_Screen.place_forget()
     Sandbox_Screen.place(relheight=1, relwidth=1)
@@ -130,19 +129,43 @@ clear_tool.bind("<ButtonRelease-1>", remove_focus)
 import_tool.bind("<ButtonRelease-1>", remove_focus)
 
 # explorer
+
+# Funcs
+
+
+def refresh_tv(treeview, dic):
+    for item in treeview.get_children():
+        treeview.delete(item)
+
+    for k in dic:
+        shortname = k
+        # Verifica se o shortname excede 16 caracteres
+        if len(shortname) > 16:
+            shortname = shortname[:16] + "..."
+
+        treeview.insert("", "end", values=(shortname, dic[k]["Name"], dic[k]["Extension"], dic[k]["Adress"]))
+
+
 def import_file():
-    filelist = get_file_dox() # retorna arquivos importados como: [{'Name': 'Obsidian-1.6.7', 'Extension': 'exe', 'Adress': 'C:/Users/User/Downloads/Obsidian-1.6.7.exe'}]
-    
-    values = [(item["Name"], item["Extension"], item["Adress"]) for item in filelist]
+    # retorna arquivos importados como: [{'Name': 'Obsidian-1.6.7', 'Extension': 'exe', 'Adress': 'C:/Users/User/Downloads/Obsidian-1.6.7.exe'}]
+    filelist = get_file_dox()
+
+    values = [(item["Name"], item["Extension"], item["Adress"])
+              for item in filelist]
 
     for n, e, a in values:
-        
-        print(verify_existed_file(n, e, data))
+        shortname = verify_existed_file(n)
 
-        
-def test():
-    print(get_file_dox())
+        commit = {shortname: {"Name": n, "Extension": e, "Adress": a}}
 
+        data.update(commit)
+        with open("lib/log.json", "w") as file:
+            json.dump(data, file, indent=4)
+
+    refresh_tv(tv, data)
+
+
+# Widgets
 search_bar = ttk.Entry(tab1, width=19)
 search_bar.place(x=805, y=20)
 sort_btn = ttk.Button(tab1, text="Sortering", image=sort_tk)
@@ -160,13 +183,14 @@ sort_btn.bind("<ButtonRelease-1>", remove_focus)
 file_btn.bind("<ButtonRelease-1>", remove_focus)
 add_btn.bind("<ButtonRelease-1>", remove_focus)
 
-files_dic = {}
-
 tv = ttk.Treeview(tab1, columns=("name"), show="headings")
 tv.column("name", minwidth=50, width=50)
 tv.heading("name", text="Aa-Zz")
 
 tv.place(width=170, height=440, x=805, y=90)
+
+refresh_tv(tv, data)
+
 # Exe
 sv_ttk.use_dark_theme()
 window.mainloop()

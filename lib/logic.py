@@ -3,6 +3,7 @@ from tkinter import ttk
 from random import randint
 from tkinter import filedialog
 import os
+import json
 from PIL import Image, ImageTk
 
 # MÉTODOS | METHODS
@@ -73,26 +74,24 @@ def get_file_dox():
 def print_tv_active(tree : ttk.Treeview):
     print(tree.bind(ACTIVE))
 
-def verify_existed_file(name, extension, json):
-    # Listar todos os pares de Nome e Extensão no JSON
-    values_Name_Ex = [(item['Name'], item['Extension']) for item in json.values()]
+def verify_existed_file(name):
+    # Listar todos os pares de Nome no JSON (não importa a extensão para renomeação)
+    with open("lib/log.json") as file:
+        data = json.load(file)
     
-    # Verificar se o nome e a extensão já existem
+    values_Name = [item['Name'] for item in data.values()]
+    
+    
+    # Verificar se o nome base já existe
     reformated_name = name
-    contador = 1
-    while (reformated_name, extension) in values_Name_Ex:
-        reformated_name = f"{name}({contador})"
-        contador += 1
+    contador = values_Name.count(name)
     
+    if contador >0:
+        reformated_name = f"{name}({contador})"
+    else:
+        reformated_name = name
+
     # Retornar o nome único
     return reformated_name
 
-def add_to_json():
-    pass
 
-def refresh_tv(treeview: ttk.Treeview, logs):
-    for item in treeview.get_children():
-        treeview.delete(item)
-
-    for log in logs:
-        treeview.insert("", "end", values=(log["Name"], log["Extension"], log["Adress"]))

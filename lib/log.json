@@ -1,13 +1,12 @@
 {
-    "shortname1": {
-        "Name": "arquivoTeste1",
-        "Extension": "jpg",
-        "Adress": "C:/imagens/arquivo1.jpg"
-    },
-    "shortname2": {
-        "Name": "arquivoTeste2",
+    "shape": {
+        "Name": "shape",
         "Extension": "png",
-        "Adress": "C:/imagens/arquivo1.png"
+        "Adress": "C:/Users/BRUNO/Downloads/shape.png"
+    },
+    "3d-cube": {
+        "Name": "3d-cube",
+        "Extension": "png",
+        "Adress": "C:/Users/BRUNO/Downloads/3d-cube.png"
     }
 }
-

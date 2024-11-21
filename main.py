@@ -54,7 +54,7 @@ task_container.place(relx=0.5, rely=0.5, anchor="center")
 notice = ttk.Label(task_container, text="No tasks available.")
 notice.place(relx=0.5, rely=0.5, anchor="center")
 
-# -Buttons
+# Buttons
 
 
 def go_to_sandbox():
@@ -93,44 +93,9 @@ screen.pack(fill=BOTH, expand=True)
 
 screen.bind("<ButtonRelease-1>", remove_focus)
 
-# properties
-name_entry = ttk.Entry(tab1, width=15)
-name_entry.place(x=35, y=20)
+# *Explorer
 
-prop_frame = ttk.Labelframe(tab1, width=175, height=470, text="Properties")
-prop_frame.place(x=20, y=60)
-prop_frame.bind("<ButtonRelease-1>", remove_focus)
-
-# workspace
-workspace = ttk.Labelframe(tab1, text="Workspace")
-workspace.place(x=210, y=60, height=470, width=580)
-workspace.bind("<ButtonRelease-1>", remove_focus)
-
-# workspace tools
-modes = ["Default (Unordered)", "Timed"]
-typeCBox = ttk.Combobox(tab1, values=modes, width=16)
-typeCBox.set(modes[0])
-typeCBox.place(x=220, y=15)
-
-delete_tool = ttk.Button(
-    tab1, width=4, style="Accent.TButton", image=minus_tk, compound="center")
-delete_tool.place(x=730, y=15)
-
-save_tool = ttk.Button(tab1, text="Save")
-save_tool.place(x=670, y=15, )
-clear_tool = ttk.Button(tab1, text="Clear All")
-clear_tool.place(x=589, y=15, )
-import_tool = ttk.Button(tab1, text="Import Task")
-import_tool.place(x=487, y=15, )
-
-delete_tool.bind("<ButtonRelease-1>", remove_focus)
-save_tool.bind("<ButtonRelease-1>", remove_focus)
-clear_tool.bind("<ButtonRelease-1>", remove_focus)
-import_tool.bind("<ButtonRelease-1>", remove_focus)
-
-# explorer
-
-# Funcs
+# Methods
 
 
 def refresh_tv(treeview, dic):
@@ -143,11 +108,11 @@ def refresh_tv(treeview, dic):
         if len(shortname) > 16:
             shortname = shortname[:16] + "..."
 
-        treeview.insert("", "end", values=(shortname, dic[k]["Name"], dic[k]["Extension"], dic[k]["Adress"]))
+        treeview.insert("", "end", values=(
+            shortname, dic[k]["Name"], dic[k]["Extension"], dic[k]["Adress"]))
 
 
 def import_file():
-    # retorna arquivos importados como: [{'Name': 'Obsidian-1.6.7', 'Extension': 'exe', 'Adress': 'C:/Users/User/Downloads/Obsidian-1.6.7.exe'}]
     filelist = get_file_dox()
 
     values = [(item["Name"], item["Extension"], item["Adress"])
@@ -190,6 +155,84 @@ tv.heading("name", text="Aa-Zz")
 tv.place(width=170, height=440, x=805, y=90)
 
 refresh_tv(tv, data)
+
+# *Workspace
+cont = ttk.Labelframe(tab1, text="Workspace")
+cont.place(x=210, y=60, height=470, width=580)
+
+canvas = Canvas(cont)
+canvas.pack(fill=BOTH, expand=True, padx=1, pady=(0, 3))
+
+canvas_frame = Frame(canvas)
+canvas.create_window((0, 0), window=canvas_frame, anchor="nw")
+
+MAX_COLS = 4
+current_row = 0
+current_col = 0
+
+
+def add_element():
+    global current_row, current_col
+
+    if current_col == MAX_COLS:
+        current_col = 0
+        current_row += 1
+
+    element = ttk.Frame(canvas_frame, width=120,
+                        height=180, style="Card.TFrame")
+
+    element.grid(row=current_row, column=current_col, padx=11, pady=10)
+    element.bind("<MouseWheel>", on_mouse_wheel)
+
+    current_col += 1
+
+    canvas_frame.update_idletasks()
+    canvas.config(scrollregion=canvas.bbox("all"))
+
+
+def on_mouse_wheel(event):
+    if current_row <= 1:
+        print(current_row)
+        return
+    delta = -1 * (event.delta // 120)
+
+    canvas.yview_scroll(delta, "units")
+
+
+canvas_frame.bind("<MouseWheel>", on_mouse_wheel)
+
+add_btn = ttk.Button(tab1, text="Adicionar Elemento", command=add_element)
+add_btn.place(x=250, y=450)
+
+# Operations
+modes = ["Default (Unordered)", "Timed"]
+typeCBox = ttk.Combobox(tab1, values=modes, width=16)
+typeCBox.set(modes[0])
+typeCBox.place(x=220, y=15)
+
+delete_tool = ttk.Button(
+    tab1, width=4, style="Accent.TButton", image=minus_tk, compound="center")
+delete_tool.place(x=730, y=15)
+
+save_tool = ttk.Button(tab1, text="Save")
+save_tool.place(x=670, y=15, )
+clear_tool = ttk.Button(tab1, text="Clear All")
+clear_tool.place(x=589, y=15, )
+import_tool = ttk.Button(tab1, text="Import Task")
+import_tool.place(x=487, y=15, )
+
+delete_tool.bind("<ButtonRelease-1>", remove_focus)
+save_tool.bind("<ButtonRelease-1>", remove_focus)
+clear_tool.bind("<ButtonRelease-1>", remove_focus)
+import_tool.bind("<ButtonRelease-1>", remove_focus)
+
+# *Properties
+name_entry = ttk.Entry(tab1, width=15)
+name_entry.place(x=35, y=20)
+
+prop_frame = ttk.Labelframe(tab1, width=175, height=470, text="Properties")
+prop_frame.place(x=20, y=60)
+prop_frame.bind("<ButtonRelease-1>", remove_focus)
 
 # Exe
 sv_ttk.use_dark_theme()

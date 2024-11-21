@@ -34,6 +34,7 @@ def add_item_to_lb(item_list, listbox, name=None):
     item_list.append(name)  
     refresh_lb(listbox, item_list)
 
+# Explorer
 def get_file():
     filetypes = (("All", "*.png *.jpeg, *.jpg, *.exe"), ("PNG", "*.png"), ("JPEG", "*.jpeg, *.jpg"), ("EXE", "*.exe"))
     filenames = filedialog.askopenfilenames(initialdir="C:\\", title="Select a file", filetypes=filetypes)
@@ -94,4 +95,4 @@ def verify_existed_file(name):
     # Retornar o nome único
     return reformated_name
 
-
+# Workspace

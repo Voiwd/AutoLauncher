@@ -1,6 +1,6 @@
 from tkinter import *
 from tkinter import ttk
-from lib.logic import print_tv_active, get_file_dox, verify_existed_file
+from lib.logic import get_icon, get_file_dox, verify_existed_file
 from PIL import Image, ImageTk
 import sv_ttk
 import json
@@ -8,11 +8,12 @@ import json
 with open("lib/log.json", "r") as f:
     data = json.load(f)
 
-# Color palette
-light1 = "#60C7FB"
-light2 = "#FFFFFF"
-dark1 = "#2E2E2E"
-dark2 = "#1C1C1C"
+# Constants
+applist = []
+
+MAX_COLS = 5
+current_row = 0
+current_col = 0
 
 
 def remove_focus(event):
@@ -129,8 +130,22 @@ def import_file():
 
     refresh_tv(tv, data)
 
-
 # Widgets
+
+
+def pull_to_workspace(tv: ttk.Treeview):
+    focused_item = tv.focus()
+    if focused_item:
+        itemlog = tv.item(focused_item, "values")
+
+        name = itemlog[1]
+        ext = itemlog[2]
+        path = itemlog[3]  
+        
+        add_element(name, ext, path)
+    else:
+        print("Nenhum item está ativo.")
+
 search_bar = ttk.Entry(tab1, width=19)
 search_bar.place(x=805, y=20)
 sort_btn = ttk.Button(tab1, text="Sortering", image=sort_tk)
@@ -141,7 +156,7 @@ file_btn = ttk.Button(tab1, text="Add File", image=folder_tk,
 file_btn.place(x=850, y=55)
 
 add_btn = ttk.Button(tab1, image=plus_tk, width=4,
-                     compound="center", style="Accent.TButton")
+                     compound="center", style="Accent.TButton", command=lambda: pull_to_workspace(tv))
 add_btn.place(x=920, y=55)
 
 sort_btn.bind("<ButtonRelease-1>", remove_focus)
@@ -166,33 +181,48 @@ canvas.pack(fill=BOTH, expand=True, padx=1, pady=(0, 3))
 canvas_frame = Frame(canvas)
 canvas.create_window((0, 0), window=canvas_frame, anchor="nw")
 
-MAX_COLS = 4
-current_row = 0
-current_col = 0
-
-
-def add_element():
+def add_element(name, ext, path):
     global current_row, current_col
 
     if current_col == MAX_COLS:
         current_col = 0
         current_row += 1
 
-    element = ttk.Frame(canvas_frame, width=120,
-                        height=180, style="Card.TFrame")
+    # Criação do item que será adicionado à app_list
+    item = {
+        "id": len(applist),  
+        "name": name,
+        "ext": ext,
+        "path": path
+    }
 
-    element.grid(row=current_row, column=current_col, padx=11, pady=10)
+    # Adicionando o item na lista
+    applist.append(item)
+
+    element = ttk.Frame(canvas_frame)
+    element.grid(row=current_row, column=current_col, padx=8, pady=10)
+
+    url = get_icon(ext)
+    image = ImageTk.PhotoImage(Image.open(url).resize((90, 90)))
+
+    lbl = Label(element, image=image)
+    lbl.image = image
+    lbl.pack(padx=2, pady=2)
+
+    text = ttk.Label(element, text=name, font=("Arial", 13), background="gray", padding=(5, 0))
+    text.pack(padx=2, pady=10)
+
+    text.bind("<MouseWheel>", on_mouse_wheel)
     element.bind("<MouseWheel>", on_mouse_wheel)
+    lbl.bind("<MouseWheel>", on_mouse_wheel)
 
+    # Atualiza o canvas
     current_col += 1
-
     canvas_frame.update_idletasks()
     canvas.config(scrollregion=canvas.bbox("all"))
 
-
 def on_mouse_wheel(event):
-    if current_row <= 1:
-        print(current_row)
+    if current_row <= 2:
         return
     delta = -1 * (event.delta // 120)
 
@@ -201,7 +231,7 @@ def on_mouse_wheel(event):
 
 canvas_frame.bind("<MouseWheel>", on_mouse_wheel)
 
-add_btn = ttk.Button(tab1, text="Adicionar Elemento", command=add_element)
+add_btn = ttk.Button(tab1, text="Adicionar Elemento",)
 add_btn.place(x=250, y=450)
 
 # Operations

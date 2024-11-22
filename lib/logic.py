@@ -16,42 +16,28 @@ from PIL import Image, ImageTk
 # file_to_lb :  Usa o metodo anterior (open_file) e adiciona os arquivos a listbox
 
 # Functions
-def refresh_lb(listbox, item_list):
-    listbox.delete(0, listbox.size())
-    for a in item_list:
-        listbox.insert(END, a)
-
-def print_lb_active(listbox):
-    print(listbox.get(ACTIVE))
-
-def print_lb_sel(listbox):
-    selected_items = [listbox.get(i) for i in listbox.curselection()]  
-    print("Itens selecionados:", selected_items)
-
-def add_item_to_lb(item_list, listbox, name=None):
-    if name is None:
-        name = str(randint(1, 10))
-    item_list.append(name)  
-    refresh_lb(listbox, item_list)
 
 # Explorer
 def get_file():
-    filetypes = (("All", "*.png *.jpeg, *.jpg, *.exe"), ("PNG", "*.png"), ("JPEG", "*.jpeg, *.jpg"), ("EXE", "*.exe"))
+    filetypes = (("All", "*.png *.jpeg, *.jpg, *.exe, *.mp3"), ("Images", "*.jpeg, *.jpg, *.png"), ("Exe", "*.exe"), ("Audio", "*.mp3"), )
     filenames = filedialog.askopenfilenames(initialdir="C:\\", title="Select a file", filetypes=filetypes)
     
     return filenames
 
 def get_icon(file_type):
     # gallery
-    icon_gallery = {
-        "png": "lib/source/image.png",
-        "jpeg": "lib/source/image.png",
-        "jpg": "lib/source/image.png",
-        "mp3": "lib/source/audio.png",
-        "wav": "lib/source/audio.png",
-        "exe": "lib/source/exe.png"}
+    gallery = {
+        "png" : "lib/source/image.png",
+        "jpeg" : "lib/source/image.png",
+        "jpg" : "lib/source/image.png", 
+        "mp3" : "lib/source/audio.png",
+        "exe" : "lib/source/exe.png",
+        "txt" : "lib/source/text.png",
+        "pdf" : "lib/source/pdf.png",
+        "html" : "lib/source/internet.png",
+        "htm" : "lib/source/internet.png"}
 
-    return icon_gallery.get(file_type, "lib/source/file.png")
+    return gallery.get(file_type, "lib/source/file.png")
 
 def get_file_dox():
     files = get_file()
